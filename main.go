@@ -17,7 +17,7 @@ func countWordsInFile(filename string, wg *sync.WaitGroup, results chan<- map[st
 	// open the file
 	file, err := os.Open(filename)
 	if err != nil {
-		log.Fatalf("Error opening file %s: %v\n", filename, err)
+		log.Printf("Error opening file %s: %v\n", filename, err)
 		return
 	}
 	// close the file when the function is done
@@ -40,7 +40,7 @@ func countWordsInFile(filename string, wg *sync.WaitGroup, results chan<- map[st
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatalf("Error reading file %s: %v\n", filename, err)
+		fmt.Printf("Error reading file %s: %v\n", filename, err)
 		return
 	}
 
@@ -52,7 +52,7 @@ func main() {
 	// get all files in textfiles directory
 	files, err := filepath.Glob("textfiles/*.text")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error getting files: %v\n", err)
 	}
 
 	totalWords := 0
@@ -72,7 +72,7 @@ func main() {
 	// wait for all the files to be processed
 	wg.Wait()
 
-	// close the channel
+	// close the channel to indicate that no more results will be sent
 	close(results)
 
 	// collect and display the results
